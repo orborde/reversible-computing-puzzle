@@ -73,8 +73,27 @@ def generate() -> Iterable[Circuit]:
 
         frontier = new_frontier
 
+def fredkin_oracle(switch: bool, x: bool, y: bool) -> Tuple[bool, bool]:
+    if switch:
+        return y,x
+    else:
+        return x,y
+
+def check(circuit: Circuit) -> bool:
+    for (switch, x, y) in itertools.product([True,False], repeat=3): # type: ignore - https://github.com/python/typeshed/issues/1850
+        exp_x, exp_y = fredkin_oracle(switch, x, y)
+        values = circuit.evaluate([switch, x, y])
+        act_x, act_y = values[-2:]
+
+        if (exp_x, exp_y) != (act_x, act_y):
+            print(f'{switch, x, y}: {exp_x, exp_y} != {act_x, act_y}')
+            return False
+    return True
+
 if __name__ == '__main__':
-    circuits = itertools.islice(generate(), 10)
-    for c in circuits:
+    for c in generate():
         print(c)
+        v = check(c)
         print()
+
+        if v: break
