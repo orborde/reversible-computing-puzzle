@@ -69,7 +69,7 @@ def generate() -> Iterable[Circuit]:
                 for x in range(len(prefix)):
                     item = prefix + [Toffoli(i1,i2,x)]
                     new_frontier.append(item)
-                    yield item
+                    yield Circuit(item)
 
         frontier = new_frontier
 
