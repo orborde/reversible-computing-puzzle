@@ -17,9 +17,10 @@ class Toffoli(Gate):
         x  = values[self._x]
 
         if i1 and i2:
-            return [i1, i2, not x]
-        else:
-            return [i1, i2, x]
+            x = not x
+
+        mutations = {self._x: x}
+        return [mutations[i] if i in mutations else v for i, v in enumerate(values)]
 
     def __str__(self) -> str:
         return f'Toffoli(({self._i1}, {self._i2}) ! {self._x})'
@@ -41,7 +42,7 @@ class Circuit:
     def evaluate(self, inputs: List[bool]) -> List[bool]:
         assert len(inputs) == self._num_qubits
 
-        values: List[bool] = []
+        values: List[bool] = inputs
         for gate in self._gates:
             values = gate.evaluate(values)
         
