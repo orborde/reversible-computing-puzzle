@@ -1,4 +1,4 @@
-from solve import *
+from solve_classical import *
 
 def test_simple():
     gates = [
