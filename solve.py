@@ -50,16 +50,17 @@ class Circuit:
 
 def generate() -> Iterable[Circuit]:
     frontier: List[List[Gate]] = [[]]
+    qubits = list(range(3))
 
     while True:
         new_frontier: List[List[Gate]] = []
 
         for prefix in frontier:
-            for i1,i2 in itertools.combinations(range(len(prefix)), r=2):
-                for x in range(len(prefix)):
+            for i1,i2 in itertools.combinations(qubits, r=2):
+                for x in qubits:
                     item = prefix + [Toffoli(i1,i2,x)]
                     new_frontier.append(item)
-                    yield Circuit(item)
+                    yield Circuit(len(qubits), item)
 
         frontier = new_frontier
 
@@ -86,4 +87,6 @@ if __name__ == '__main__':
         v = check(c)
         print()
 
-        if v: break
+        if v:
+            print('SOLVED')
+            break
